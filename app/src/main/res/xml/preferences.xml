@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:key="ai_mode"
+        android:summary="Play against the computer"
+        android:title="AI Mode" />
+    <ListPreference
+        android:key="number_of_moves"
+        android:summary="Limit the number of moves"
+        android:title="Limit Moves"
+        android:dialogTitle="Number of moves"
+        android:entries="@array/ai_moves_keys"
+        android:entryValues="@array/ai_moves_values"
+        android:defaultValue="2" />
+    <ListPreference
+        android:key="score_limit"
+        android:summary="Limit the score"
+        android:title="Limit Score"
+        android:dialogTitle="Score"
+        android:entries="@array/ai_score_keys"
+        android:entryValues="@array/ai_score_values"
+        android:defaultValue="10" />
+</PreferenceScreen>

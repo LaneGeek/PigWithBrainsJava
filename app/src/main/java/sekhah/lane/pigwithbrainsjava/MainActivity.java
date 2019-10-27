@@ -1,8 +1,10 @@
 package sekhah.lane.pigwithbrainsjava;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,12 +24,21 @@ public class MainActivity extends AppCompatActivity {
     private TextView player2ScoreTextView;
     private TextView nextTurnTextView;
     private TextView turnPointsTextView;
+    private TextView aiModeTextView;
+    private TextView aiMovesTextView;
+    private TextView aiScoreTextView;
     private ImageView dieImageView;
     private Button rollDieButton;
     private Button turnButton;
 
     private PigGame pigGame = new PigGame();
     private int die = 0;
+
+    // Variables for user settings
+    private SharedPreferences prefs;
+    private boolean aiMode = false;
+    private int aiMoves = 2;
+    private int aiScore = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +51,15 @@ public class MainActivity extends AppCompatActivity {
         player2ScoreTextView = findViewById(R.id.player2ScoreTextView);
         nextTurnTextView = findViewById(R.id.nextTurnTextView);
         turnPointsTextView = findViewById(R.id.turnPointsTextView);
+        aiModeTextView = findViewById(R.id.aiModeTextView);
+        aiMovesTextView = findViewById(R.id.aiMovesTextView);
+        aiScoreTextView = findViewById(R.id.aiScoreTextView);
         dieImageView = findViewById(R.id.dieImageView);
         rollDieButton = findViewById(R.id.rollDieButton);
         turnButton = findViewById(R.id.turnButton);
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         updateScreen();
     }
@@ -55,10 +74,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_settings:
-                player1ScoreTextView.setText("Settings");
+                startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.menu_about:
-                player1ScoreTextView.setText("About");
+                Toast.makeText(this, "Pig Game", Toast.LENGTH_LONG).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -66,33 +85,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
+    public void onPause() {
         // Save the current game state
-        savedInstanceState.putInt("player1Score", pigGame.getPlayer1Score());
-        savedInstanceState.putInt("player2Score", pigGame.getPlayer2Score());
-        savedInstanceState.putInt("turnPoints", pigGame.getTurnPoints());
-        savedInstanceState.putInt("currentPlayer", pigGame.getCurrentPlayer());
-        savedInstanceState.putInt("die", die);
-        savedInstanceState.putBoolean("rollDieButtonEnabled", rollDieButton.isEnabled());
-        savedInstanceState.putBoolean("turnButtonEnabled", turnButton.isEnabled());
-        savedInstanceState.putString("turnButtonText", turnButton.getText().toString());
+        Editor editor = prefs.edit();
+        editor.putInt("player1Score", pigGame.getPlayer1Score());
+        editor.putInt("player2Score", pigGame.getPlayer2Score());
+        editor.putInt("turnPoints", pigGame.getTurnPoints());
+        editor.putInt("currentPlayer", pigGame.getCurrentPlayer());
+        editor.putInt("die", die);
+        editor.putBoolean("rollDieButtonEnabled", rollDieButton.isEnabled());
+        editor.putBoolean("turnButtonEnabled", turnButton.isEnabled());
+        editor.putString("turnButtonText", turnButton.getText().toString());
+        editor.commit();
 
-        super.onSaveInstanceState(savedInstanceState);
+        super.onPause();
     }
 
     @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        // Restore the game state
-        super.onRestoreInstanceState(savedInstanceState);
+    protected void onResume() {
+        super.onResume();
 
-        pigGame.setPlayer1Score(savedInstanceState.getInt("player1Score"));
-        pigGame.setPlayer2Score(savedInstanceState.getInt("player2Score"));
-        pigGame.setTurnPoints(savedInstanceState.getInt("turnPoints"));
-        pigGame.setCurrentPlayer(savedInstanceState.getInt("currentPlayer"));
-        die = savedInstanceState.getInt("die");
-        rollDieButton.setEnabled(savedInstanceState.getBoolean("rollDieButtonEnabled"));
-        turnButton.setEnabled(savedInstanceState.getBoolean("turnButtonEnabled"));
-        turnButton.setText(savedInstanceState.getString("turnButtonText"));
+        pigGame.setPlayer1Score(prefs.getInt("player1Score", 0));
+        pigGame.setPlayer2Score(prefs.getInt("player2Score", 0));
+        pigGame.setTurnPoints(prefs.getInt("turnPoints", 0));
+        pigGame.setCurrentPlayer(prefs.getInt("currentPlayer", 0));
+        die = prefs.getInt("die", 0);
+        rollDieButton.setEnabled(prefs.getBoolean("rollDieButtonEnabled", false));
+        turnButton.setEnabled(prefs.getBoolean("turnButtonEnabled", true));
+        turnButton.setText(prefs.getString("turnButtonText", "NEW GAME"));
+
+        aiMode = prefs.getBoolean("ai_mode", false);
+        aiMoves = Integer.parseInt(prefs.getString("number_of_moves", "2"));
+        aiScore = Integer.parseInt(prefs.getString("score_limit", "10"));
 
         updateScreen();
     }
@@ -138,6 +162,16 @@ public class MainActivity extends AppCompatActivity {
         player1ScoreTextView.setText(Integer.toString(pigGame.getPlayer1Score()));
         player2ScoreTextView.setText(Integer.toString(pigGame.getPlayer2Score()));
         turnPointsTextView.setText(Integer.toString(pigGame.getTurnPoints()));
+
+        if (aiMode) {
+            aiModeTextView.setText("AI Mode ON");
+            aiMovesTextView.setText("Move Limit: " + aiMoves);
+            aiScoreTextView.setText("Score Limit: " + aiScore);
+        } else {
+            aiModeTextView.setText("");
+            aiMovesTextView.setText("");
+            aiScoreTextView.setText("");
+        }
 
         // Check for winner
         if (pigGame.checkForWinner() != -1) {

@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">Pig With Brains Java</string>
+    <string-array name="ai_moves_keys">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="ai_moves_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="ai_score_keys">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
+    <string-array name="ai_score_values">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
 </resources>
