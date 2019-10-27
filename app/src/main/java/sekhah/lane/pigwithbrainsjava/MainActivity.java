@@ -1,8 +1,11 @@
 package sekhah.lane.pigwithbrainsjava;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,6 +43,26 @@ public class MainActivity extends AppCompatActivity {
         turnButton = findViewById(R.id.turnButton);
 
         updateScreen();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                player1ScoreTextView.setText("Settings");
+                return true;
+            case R.id.menu_about:
+                player1ScoreTextView.setText("About");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
