@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         if (die == 1) {
             rollDieButton.setEnabled(false);
             turnButton.setText("End Turn");
-            pigGame.changeTurn();
+            endOfTurn();
         }
         updateScreen();
     }
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             turnButton.setText("Start Turn");
             rollDieButton.setEnabled(false);
-            pigGame.changeTurn();
+            endOfTurn();
             die = 0;
         }
         updateScreen();
@@ -151,6 +151,27 @@ public class MainActivity extends AppCompatActivity {
         turnButton.setText("Start Turn");
         turnButton.setEnabled(true);
         updateScreen();
+    }
+
+    private void endOfTurn() {
+        pigGame.changeTurn();
+        if (pigGame.getCurrentPlayer() == 2 && aiMode) {
+            computerTurn();
+            Toast.makeText(this, "Computer's Turn", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void computerTurn() {
+        for (int i = 1; i < aiMoves; i++)
+        {
+            die = pigGame.rollDie();
+            if (die == 1) {
+                rollDieButton.setEnabled(false);
+                turnButton.setText("End Turn");
+                pigGame.changeTurn();
+            }
+            updateScreen();
+        }
     }
 
     private void updateScreen() {
@@ -167,10 +188,12 @@ public class MainActivity extends AppCompatActivity {
             aiModeTextView.setText("AI Mode ON");
             aiMovesTextView.setText("Move Limit: " + aiMoves);
             aiScoreTextView.setText("Score Limit: " + aiScore);
+            player2NameEditText.setText("Computer");
         } else {
             aiModeTextView.setText("");
             aiMovesTextView.setText("");
             aiScoreTextView.setText("");
+            player2NameEditText.setText("Player 2");
         }
 
         // Check for winner

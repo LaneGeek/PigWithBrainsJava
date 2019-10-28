@@ -4,7 +4,7 @@ import java.util.Random;
 
 class PigGame {
 
-    private final int WINNING_SCORE = 20;
+    private final int WINNING_SCORE = 40;
 
     private Random rand = new Random();
     private int player1Score = 0;
