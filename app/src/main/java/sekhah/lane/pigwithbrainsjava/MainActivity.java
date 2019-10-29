@@ -162,10 +162,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void computerTurn() {
-        for (int i = 1; i < aiMoves; i++)
+        for (int i = 0; i < aiMoves; i++)
         {
             die = pigGame.rollDie();
-            if (die == 1) {
+            if (die == 1 || pigGame.getTurnPoints() > aiScore) {
                 rollDieButton.setEnabled(false);
                 turnButton.setText("End Turn");
                 pigGame.changeTurn();
