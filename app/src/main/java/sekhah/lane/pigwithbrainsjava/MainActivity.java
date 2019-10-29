@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         die = prefs.getInt("die", 0);
         rollDieButton.setEnabled(prefs.getBoolean("rollDieButtonEnabled", false));
         turnButton.setEnabled(prefs.getBoolean("turnButtonEnabled", true));
-        turnButton.setText(prefs.getString("turnButtonText", "NEW GAME"));
+        turnButton.setText(prefs.getString("turnButtonText", "Start Turn"));
 
         aiMode = prefs.getBoolean("ai_mode", false);
         aiMoves = Integer.parseInt(prefs.getString("number_of_moves", "2"));
