@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         pigGame.setPlayer1Score(prefs.getInt("player1Score", 0));
         pigGame.setPlayer2Score(prefs.getInt("player2Score", 0));
         pigGame.setTurnPoints(prefs.getInt("turnPoints", 0));
-        pigGame.setCurrentPlayer(prefs.getInt("currentPlayer", 0));
+        pigGame.setCurrentPlayer(prefs.getInt("currentPlayer", 1));
         die = prefs.getInt("die", 0);
         rollDieButton.setEnabled(prefs.getBoolean("rollDieButtonEnabled", false));
         turnButton.setEnabled(prefs.getBoolean("turnButtonEnabled", true));
